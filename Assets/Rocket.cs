@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class Rocket : MonoBehaviour
 
     Rigidbody rigidBody;
     AudioSource boosterAudio;
+
+    enum State { Alive, Dying, Transcending };
+    State state = State.Alive;
 
 
     // Start is called before the first frame update
@@ -21,8 +25,11 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        inputThrust();
-        inputRotate();
+        if (state == State.Alive)
+        {
+            inputThrust();
+            inputRotate();
+        }
     }
 
     void inputThrust()
@@ -30,11 +37,13 @@ public class Rocket : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
         {
             rigidBody.AddRelativeForce(Vector3.up * mainThrust);
-            if (!boosterAudio.isPlaying) {
+            if (!boosterAudio.isPlaying)
+            {
                 boosterAudio.Play();
             }
         }
-        else {
+        else
+        {
             boosterAudio.Stop();
         }
     }
@@ -60,20 +69,36 @@ public class Rocket : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        switch (collision.gameObject.tag)
+        if (state == State.Alive)
         {
-            case "Friendly":
-                print("You won!");
-                break;
-            
-            case "Fuel":
-                print("You got fuel!");
-                break;
+            switch (collision.gameObject.tag)
+            {
+                case "Friendly":
+                    // do nothing
+                    break;
 
-            default:
-                print("You died!");
-                break;
+                case "Finish":
+                    state = State.Transcending;
+                    Invoke("LoadNextLevel", 1f);
+                    break;
+
+                default:
+                    state = State.Dying;
+                    Invoke("LoadFirstLevel", 1f);
+                    break;
+            }
+
         }
+    }
+
+    void LoadNextLevel()
+    {
+        SceneManager.LoadScene(1); // TODO: Allow more than 2 levels
+    }
+
+    void LoadFirstLevel()
+    {
+        SceneManager.LoadScene(0);
     }
 
 }
