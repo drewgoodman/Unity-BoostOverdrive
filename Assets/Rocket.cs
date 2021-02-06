@@ -7,9 +7,12 @@ public class Rocket : MonoBehaviour
 {
     [SerializeField] float rcsThrust = 100f;
     [SerializeField] float mainThrust = 100f;
+    [SerializeField] AudioClip mainEngineSFX;
+    [SerializeField] AudioClip deathSFX;
+    [SerializeField] AudioClip levelLoadSFX;
 
     Rigidbody rigidBody;
-    AudioSource boosterAudio;
+    AudioSource audioSource;
 
     enum State { Alive, Dying, Transcending };
     State state = State.Alive;
@@ -19,7 +22,7 @@ public class Rocket : MonoBehaviour
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
-        boosterAudio = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -27,28 +30,33 @@ public class Rocket : MonoBehaviour
     {
         if (state == State.Alive)
         {
-            inputThrust();
-            inputRotate();
+            RespondToThrustInput();
+            RespondToRotateInput();
         }
     }
 
-    void inputThrust()
+    void RespondToThrustInput()
     {
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
         {
             rigidBody.AddRelativeForce(Vector3.up * mainThrust);
-            if (!boosterAudio.isPlaying)
-            {
-                boosterAudio.Play();
-            }
+            ApplyThrust();
         }
         else
         {
-            boosterAudio.Stop();
+            audioSource.Stop();
         }
     }
 
-    void inputRotate()
+    void ApplyThrust()
+    {
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(mainEngineSFX);
+        }
+    }
+
+    void RespondToRotateInput()
     {
 
         rigidBody.freezeRotation = true; // take manual control of rotation
@@ -69,26 +77,37 @@ public class Rocket : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (state == State.Alive)
+        if (state != State.Alive) { return; } //ignore collisions
+
+        switch (collision.gameObject.tag)
         {
-            switch (collision.gameObject.tag)
-            {
-                case "Friendly":
-                    // do nothing
-                    break;
+            case "Friendly":
+                // do nothing
+                break;
 
-                case "Finish":
-                    state = State.Transcending;
-                    Invoke("LoadNextLevel", 1f);
-                    break;
+            case "Finish":
+                StartSuccessSequence();
+                break;
 
-                default:
-                    state = State.Dying;
-                    Invoke("LoadFirstLevel", 1f);
-                    break;
-            }
-
+            default:
+                StartDeathSequence();
+                break;
         }
+    }
+
+    void StartSuccessSequence()
+    {
+        state = State.Transcending;
+        audioSource.PlayOneShot(levelLoadSFX);
+        Invoke("LoadNextLevel", 1f);
+    }
+
+    void StartDeathSequence()
+    {
+        state = State.Dying;
+        audioSource.Stop();
+        audioSource.PlayOneShot(deathSFX);
+        Invoke("LoadFirstLevel", 1f);
     }
 
     void LoadNextLevel()
