@@ -17,6 +17,7 @@ public class Rocket : MonoBehaviour
 
     Rigidbody rigidBody;
     AudioSource audioSource;
+    GameObject musicSource;
 
     enum State { Entering, Active, Dying, Transcending };
     State state = State.Entering;
@@ -28,6 +29,11 @@ public class Rocket : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
+        musicSource = GameObject.FindGameObjectWithTag("MusicController");
+        if(musicSource)
+        {
+            musicSource.GetComponent<MusicController>().PlayMusic();
+        }
     }
 
     // Update is called once per frame
