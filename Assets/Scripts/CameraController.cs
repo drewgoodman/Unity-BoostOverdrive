@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    enum CamState { ShowGoal, PanToRocket, TrackRocket };
+    enum CamState { ShowGoal, PanToTarget, AtRest, TrackRocket };
     CamState state = CamState.ShowGoal;
     [SerializeField] GameObject rocketPlayer;
     [SerializeField] GameObject endingObject;
@@ -12,11 +12,17 @@ public class CameraController : MonoBehaviour
     Rocket rocketPlayerScript;
 
     Vector3 rocketPlayerOffset;
+    [SerializeField] GameObject[] levelPanTargets;
+    int numPanTargets = 0;
+    int currentPanTargetIndex = 0;
 
-    [SerializeField] float startPanDelay = .5f;
-    [SerializeField] float panToRocketSpeedMult = 1f;
-    float panToRocketDistance;
-    float panToRocketSpeed;
+    GameObject currentPanTarget;
+
+    [SerializeField] float startPanDelayOnset = .5f;
+    [SerializeField] float startPanDelay = 1f;
+    [SerializeField] float panToTargetSpeedMult = .8f;
+    float panToTargetDistance;
+    float panToTargetSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +32,8 @@ public class CameraController : MonoBehaviour
             rocketPlayerScript = rocketPlayer.GetComponent<Rocket>();
             rocketPlayerOffset = transform.position - rocketPlayer.transform.position;
             transform.position = endingObject.transform.position + rocketPlayerOffset;
+            numPanTargets = levelPanTargets.Length;
+            print(numPanTargets + " targets");
             Invoke("SetCameraPan", startPanDelay);
         }
         else
@@ -38,9 +46,9 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (state == CamState.PanToRocket)
+        if (state == CamState.PanToTarget)
         {
-            PanToRocket();
+            PanToTarget();
             CheckForPanCancelInput();
         }
         else if (state == CamState.TrackRocket)
@@ -49,29 +57,50 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    Vector3 PlayerCameraOffset()
+    Vector3 TargetCameraOffset(GameObject target)
     {
-        return rocketPlayer.transform.position + rocketPlayerOffset;
+        return target.transform.position + rocketPlayerOffset;
     }
 
     void TrackRocket()
     {
-        transform.position = PlayerCameraOffset();
+        transform.position = TargetCameraOffset(rocketPlayer);
     }
 
     void SetCameraPan()
     {
-        panToRocketDistance = Vector3.Distance(transform.position, PlayerCameraOffset());
-        panToRocketSpeed = panToRocketDistance * panToRocketSpeedMult;
-        state = CamState.PanToRocket;
+        if(currentPanTargetIndex >= numPanTargets)
+        {
+            currentPanTarget = rocketPlayer;
+        }
+        else
+        {
+            currentPanTarget = levelPanTargets[currentPanTargetIndex++];
+        }
+        SetCameraPanTarget(currentPanTarget);
     }
 
-    void PanToRocket()
+    void SetCameraPanTarget(GameObject target)
     {
-        Vector3 startingPlayerPos = PlayerCameraOffset();
-        transform.position = Vector3.MoveTowards(transform.position, startingPlayerPos, Time.deltaTime * panToRocketSpeed);
-        if (transform.position == startingPlayerPos) {
-            SetCameraToTrack();
+        panToTargetDistance = Vector3.Distance(transform.position, TargetCameraOffset(target));
+        panToTargetSpeed = panToTargetDistance * panToTargetSpeedMult;
+        state = CamState.PanToTarget;
+    }
+
+    void PanToTarget()
+    {
+        Vector3 panEndPosition = TargetCameraOffset(currentPanTarget);
+        transform.position = Vector3.MoveTowards(transform.position, panEndPosition, Time.deltaTime * panToTargetSpeed);
+        if (transform.position == panEndPosition) {
+            if (currentPanTarget == rocketPlayer)
+            {
+                SetCameraToTrack();
+            }
+            else
+            { 
+                state = CamState.AtRest;
+                Invoke("SetCameraPan", startPanDelay);
+            }
         }
     }
 

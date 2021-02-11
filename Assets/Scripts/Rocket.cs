@@ -99,7 +99,8 @@ public class Rocket : MonoBehaviour
                 break;
 
             default:
-                StartDeathSequence();
+                // StartDeathSequence();
+                print("Ouch!");
                 break;
         }
     }
