@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
-    [SerializeField] float rcsThrust = 100f;
+    [SerializeField] float rcsThrust = 110f;
     [SerializeField] float mainThrust = 100f;
     [SerializeField] float levelLoadDelay = 2f;
     [SerializeField] AudioClip mainEngineSFX;
@@ -21,6 +21,7 @@ public class Rocket : MonoBehaviour
 
     enum State { Entering, Active, Dying, Transcending };
     State state = State.Entering;
+    bool isThrusting = false;
     bool isGrounded = true;
 
 
@@ -41,15 +42,24 @@ public class Rocket : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        if(isThrusting)
+        {
+            rigidBody.AddRelativeForce(Vector3.up * mainThrust);
+        }
+    }
+
     void RespondToThrustInput()
     {
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
         {
-            rigidBody.AddRelativeForce(Vector3.up * mainThrust);
+            isThrusting = true;
             ApplyThrust();
         }
         else
         {
+            isThrusting = false;
             audioSource.Stop();
             mainEngineParticles.Stop();
         }

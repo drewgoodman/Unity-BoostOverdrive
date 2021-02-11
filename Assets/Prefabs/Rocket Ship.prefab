@@ -358,7 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rcsThrust: 110
-  mainThrust: 10
+  mainThrust: 100
   levelLoadDelay: 2
   mainEngineSFX: {fileID: 8300000, guid: be7d1e04c5d42424b9b969d447d68b4c, type: 3}
   deathSFX: {fileID: 8300000, guid: 46cd40b7de821594bbe890ca3d2712fe, type: 3}
