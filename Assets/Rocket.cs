@@ -20,6 +20,7 @@ public class Rocket : MonoBehaviour
 
     enum State { Entering, Active, Dying, Transcending };
     State state = State.Entering;
+    bool isGrounded = true;
 
 
     // Start is called before the first frame update
@@ -65,6 +66,8 @@ public class Rocket : MonoBehaviour
     void RespondToRotateInput()
     {
 
+        if(isGrounded) { return; } // no rotating on the launch pad!
+
         rigidBody.freezeRotation = true; // take manual control of rotation
 
         float rotationThisFrame = rcsThrust * Time.deltaTime;
@@ -88,7 +91,7 @@ public class Rocket : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Friendly":
-                // do nothing
+                isGrounded = true;
                 break;
 
             case "Finish":
@@ -98,6 +101,15 @@ public class Rocket : MonoBehaviour
             default:
                 StartDeathSequence();
                 break;
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (state != State.Active) { return; }
+        if (collision.gameObject.tag == "Friendly")
+        {
+            isGrounded = false;
         }
     }
 

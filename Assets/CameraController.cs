@@ -6,20 +6,15 @@ public class CameraController : MonoBehaviour
 {
     enum CamState { ShowGoal, PanToRocket, TrackRocket };
     CamState state = CamState.ShowGoal;
-
-    [SerializeField]
-    GameObject rocketPlayer;
-    [SerializeField]
-    GameObject endingObject;
+    [SerializeField] GameObject rocketPlayer;
+    [SerializeField] GameObject endingObject;
 
     Rocket rocketPlayerScript;
 
     Vector3 rocketPlayerOffset;
 
-    [SerializeField]
-    float startPanDelay = .5f;
-    [SerializeField]
-    float panToRocketSpeedMult = 1f;
+    [SerializeField] float startPanDelay = .5f;
+    [SerializeField] float panToRocketSpeedMult = 1f;
     float panToRocketDistance;
     float panToRocketSpeed;
 
