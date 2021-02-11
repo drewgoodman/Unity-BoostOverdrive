@@ -8,11 +8,16 @@ public class MusicController : MonoBehaviour
 
     private AudioSource musicSource;
 
-    // TODO: Handle duplicate music objects while preserving continuous audio between scenes
-
     void Start()
     {
-        DontDestroyOnLoad(transform.gameObject);
+        GameObject[] audioSourceRefs = GameObject.FindGameObjectsWithTag("MusicController");
+        if( audioSourceRefs.Length == 1) {
+            DontDestroyOnLoad(transform.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
         musicSource = GetComponent<AudioSource>();
     }
 

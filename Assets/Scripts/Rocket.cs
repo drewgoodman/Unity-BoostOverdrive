@@ -39,6 +39,7 @@ public class Rocket : MonoBehaviour
         {
             RespondToThrustInput();
             RespondToRotateInput();
+            RespondToDebugInput();
         }
     }
 
@@ -158,6 +159,18 @@ public class Rocket : MonoBehaviour
         musicSource = GameObject.FindGameObjectWithTag("MusicController");
         musicSource.GetComponent<MusicController>().PlayMusic();
         state = State.Active;
+    }
+
+    void RespondToDebugInput()
+    {
+        if(Input.GetKey(KeyCode.L))
+        {
+            LoadNextLevel();
+        }
+        // else if (Input.GetKey(KeyCode.C))
+        // {
+        //     collider.enabled = false;
+        // }
     }
 
 }
