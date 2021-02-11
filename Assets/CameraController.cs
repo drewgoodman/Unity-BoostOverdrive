@@ -19,7 +19,9 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     float startPanDelay = .5f;
     [SerializeField]
-    float panToRocketSpeed = 25f;
+    float panToRocketSpeedMult = 1f;
+    float panToRocketDistance;
+    float panToRocketSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +46,7 @@ public class CameraController : MonoBehaviour
         if (state == CamState.PanToRocket)
         {
             PanToRocket();
+            CheckForPanCancelInput();
         }
         else if (state == CamState.TrackRocket)
         {
@@ -51,21 +54,36 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    Vector3 PlayerCameraOffset()
+    {
+        return rocketPlayer.transform.position + rocketPlayerOffset;
+    }
+
     void TrackRocket()
     {
-        transform.position = rocketPlayer.transform.position + rocketPlayerOffset;
+        transform.position = PlayerCameraOffset();
     }
 
     void SetCameraPan()
     {
+        panToRocketDistance = Vector3.Distance(transform.position, PlayerCameraOffset());
+        panToRocketSpeed = panToRocketDistance * panToRocketSpeedMult;
         state = CamState.PanToRocket;
     }
 
     void PanToRocket()
     {
-        Vector3 startingPlayerPos = rocketPlayer.transform.position + rocketPlayerOffset;
+        Vector3 startingPlayerPos = PlayerCameraOffset();
         transform.position = Vector3.MoveTowards(transform.position, startingPlayerPos, Time.deltaTime * panToRocketSpeed);
         if (transform.position == startingPlayerPos) {
+            SetCameraToTrack();
+        }
+    }
+
+    void CheckForPanCancelInput()
+    {
+        if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Return))
+        {
             SetCameraToTrack();
         }
     }
@@ -74,6 +92,5 @@ public class CameraController : MonoBehaviour
     {
         state = CamState.TrackRocket;
         rocketPlayerScript.ReadyToPlay();
-        print("Ready to play!");
     }
 }

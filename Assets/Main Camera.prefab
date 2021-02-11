@@ -98,3 +98,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rocketPlayer: {fileID: 0}
   endingObject: {fileID: 0}
+  startPanDelay: 0.5
+  panToRocketSpeedMult: 1
