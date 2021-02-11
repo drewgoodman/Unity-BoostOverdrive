@@ -398,6 +398,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5f5d87260cfe2b43aca2447ac3083a5, type: 3}
+--- !u!1 &1038096718 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1582927348629828916, guid: af6043d1dd2abe14bb5818ba696cc94d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1770512843}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1048044218 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1170957580980471179, guid: 0c58d969ec686374a826957a7b276482,
@@ -1391,6 +1397,14 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2091465203, guid: c8176fcb2bd79194c9007207fa7dafe4, type: 3}
       propertyPath: cameraTarget
+      value: 
+      objectReference: {fileID: 1345329607}
+    - target: {fileID: 2091465203, guid: c8176fcb2bd79194c9007207fa7dafe4, type: 3}
+      propertyPath: endingObject
+      value: 
+      objectReference: {fileID: 1038096718}
+    - target: {fileID: 2091465203, guid: c8176fcb2bd79194c9007207fa7dafe4, type: 3}
+      propertyPath: rocketPlayer
       value: 
       objectReference: {fileID: 1345329607}
     - target: {fileID: 888788239127685475, guid: c8176fcb2bd79194c9007207fa7dafe4,

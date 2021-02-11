@@ -18,8 +18,8 @@ public class Rocket : MonoBehaviour
     Rigidbody rigidBody;
     AudioSource audioSource;
 
-    enum State { Alive, Dying, Transcending };
-    State state = State.Alive;
+    enum State { Entering, Active, Dying, Transcending };
+    State state = State.Entering;
 
 
     // Start is called before the first frame update
@@ -32,7 +32,7 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (state == State.Alive)
+        if (state == State.Active)
         {
             RespondToThrustInput();
             RespondToRotateInput();
@@ -83,7 +83,7 @@ public class Rocket : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (state != State.Alive) { return; } //ignore collisions
+        if (state != State.Active) { return; } //ignore collisions
 
         switch (collision.gameObject.tag)
         {
@@ -127,6 +127,11 @@ public class Rocket : MonoBehaviour
     void LoadFirstLevel()
     {
         SceneManager.LoadScene(0);
+    }
+
+    public void ReadyToPlay() // called from camera once finished panning
+    {
+        state = State.Active;
     }
 
 }
