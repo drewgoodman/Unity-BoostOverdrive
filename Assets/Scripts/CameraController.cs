@@ -18,23 +18,21 @@ public class CameraController : MonoBehaviour
 
     GameObject currentPanTarget;
 
-    [SerializeField] float startPanDelayOnset = .5f;
-    [SerializeField] float startPanDelay = 1f;
+    [SerializeField] float startPanDelayOnset = .7f;
+    [SerializeField] float startPanDelay = 2f;
     [SerializeField] float panToTargetSpeedMult = .8f;
     float panToTargetDistance;
     float panToTargetSpeed;
 
-    // Start is called before the first frame update
     void Start()
     {
         if (rocketPlayer && endingObject)
         {
+            numPanTargets = levelPanTargets.Length;
             rocketPlayerScript = rocketPlayer.GetComponent<Rocket>();
             rocketPlayerOffset = transform.position - rocketPlayer.transform.position;
             transform.position = endingObject.transform.position + rocketPlayerOffset;
-            numPanTargets = levelPanTargets.Length;
-            print(numPanTargets + " targets");
-            Invoke("SetCameraPan", startPanDelay);
+            Invoke("SetCameraPan", startPanDelayOnset);
         }
         else
         {
@@ -42,8 +40,6 @@ public class CameraController : MonoBehaviour
         }
     }
 
-
-    // Update is called once per frame
     void Update()
     {
         if (state == CamState.PanToTarget)
