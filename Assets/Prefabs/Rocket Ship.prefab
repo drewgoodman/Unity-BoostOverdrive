@@ -287,7 +287,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.02028997, y: 0.02028996, z: 0.042083785}
+  m_Size: {x: 0.020020997, y: 0.020028995, z: 0.042083785}
   m_Center: {x: 0, y: 0, z: 0.011097142}
 --- !u!1 &3158607215791042406
 GameObject:
@@ -357,8 +357,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dc6017d7a40d744b8c11a2d31818af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rcsThrust: 90
-  mainThrust: 9
+  rcsThrust: 110
+  mainThrust: 20
   levelLoadDelay: 2
   mainEngineSFX: {fileID: 8300000, guid: be7d1e04c5d42424b9b969d447d68b4c, type: 3}
   deathSFX: {fileID: 8300000, guid: 46cd40b7de821594bbe890ca3d2712fe, type: 3}
@@ -486,7 +486,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.02182599, y: 0.023687812, z: 0.02383903}
+  m_Size: {x: 0.01882599, y: 0.02068781, z: 0.02383903}
   m_Center: {x: 0.0022267662, y: 0.0042463816, z: -0.011709196}
 --- !u!1001 &163799149
 PrefabInstance:

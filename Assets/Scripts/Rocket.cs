@@ -29,11 +29,6 @@ public class Rocket : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
-        musicSource = GameObject.FindGameObjectWithTag("MusicController");
-        if(musicSource)
-        {
-            musicSource.GetComponent<MusicController>().PlayMusic();
-        }
     }
 
     // Update is called once per frame
@@ -105,7 +100,7 @@ public class Rocket : MonoBehaviour
                 break;
 
             default:
-                // StartDeathSequence();
+                StartDeathSequence();
                 print("Ouch!");
                 break;
         }
@@ -150,6 +145,8 @@ public class Rocket : MonoBehaviour
 
     public void ReadyToPlay() // called from camera once finished panning
     {
+        musicSource = GameObject.FindGameObjectWithTag("MusicController");
+        musicSource.GetComponent<MusicController>().PlayMusic();
         state = State.Active;
     }
 

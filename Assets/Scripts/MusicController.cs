@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MusicController : MonoBehaviour
 {
-    // use MusicController tag and call PlayMusic from Rocket script
+    // use MusicController tag and call PlayMusic from camera script
 
     private AudioSource musicSource;
 
