@@ -23,6 +23,7 @@ public class Rocket : MonoBehaviour
     State state = State.Entering;
     bool isThrusting = false;
     bool isGrounded = true;
+    bool collisionsAreEnabled = true;
 
 
     // Start is called before the first frame update
@@ -39,8 +40,12 @@ public class Rocket : MonoBehaviour
         {
             RespondToThrustInput();
             RespondToRotateInput();
+        }
+        if (Debug.isDebugBuild)
+        {
             RespondToDebugInput();
         }
+        
     }
 
     void FixedUpdate()
@@ -98,7 +103,7 @@ public class Rocket : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (state != State.Active) { return; } //ignore collisions
+        if (state != State.Active || !collisionsAreEnabled) { return; } //ignore collisions
 
         switch (collision.gameObject.tag)
         {
@@ -163,9 +168,13 @@ public class Rocket : MonoBehaviour
 
     void RespondToDebugInput()
     {
-        if(Input.GetKey(KeyCode.L))
+        if(Input.GetKeyDown(KeyCode.L))
         {
             LoadNextLevel();
+        }
+        else if (Input.GetKeyDown(KeyCode.C))
+        {
+            collisionsAreEnabled = !collisionsAreEnabled;
         }
     }
 
