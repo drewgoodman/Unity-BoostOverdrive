@@ -45,7 +45,7 @@ public class Rocket : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(isThrusting)
+        if(isThrusting && state == State.Active)
         {
             rigidBody.AddRelativeForce(Vector3.up * mainThrust);
         }
@@ -167,10 +167,6 @@ public class Rocket : MonoBehaviour
         {
             LoadNextLevel();
         }
-        // else if (Input.GetKey(KeyCode.C))
-        // {
-        //     collider.enabled = false;
-        // }
     }
 
 }
