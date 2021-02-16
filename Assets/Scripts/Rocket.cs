@@ -45,12 +45,12 @@ public class Rocket : MonoBehaviour
         {
             RespondToDebugInput();
         }
-        
+
     }
 
     void FixedUpdate()
     {
-        if(isThrusting && state == State.Active)
+        if (isThrusting && state == State.Active)
         {
             rigidBody.AddRelativeForce(Vector3.up * mainThrust);
         }
@@ -60,19 +60,17 @@ public class Rocket : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
         {
-            isThrusting = true;
             ApplyThrust();
         }
         else
         {
-            isThrusting = false;
-            audioSource.Stop();
-            mainEngineParticles.Stop();
+            StopApplyingThrust();
         }
     }
 
     void ApplyThrust()
     {
+        isThrusting = true;
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(mainEngineSFX);
@@ -80,12 +78,19 @@ public class Rocket : MonoBehaviour
         }
     }
 
+    void StopApplyingThrust()
+    {
+        isThrusting = false;
+        audioSource.Stop();
+        mainEngineParticles.Stop();
+    }
+
     void RespondToRotateInput()
     {
 
-        if(isGrounded) { return; } // no rotating on the launch pad!
+        // if (isGrounded) { return; } // no rotating on the launch pad!
 
-        rigidBody.freezeRotation = true; // take manual control of rotation
+        rigidBody.angularVelocity = Vector3.zero;
 
         float rotationThisFrame = rcsThrust * Time.deltaTime;
 
@@ -98,7 +103,6 @@ public class Rocket : MonoBehaviour
             transform.Rotate(-Vector3.forward * rotationThisFrame);
         }
 
-        rigidBody.freezeRotation = false; // resume physics control of rotation
     }
 
     void OnCollisionEnter(Collision collision)
@@ -174,7 +178,7 @@ public class Rocket : MonoBehaviour
 
     void RespondToDebugInput()
     {
-        if(Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             LoadNextLevel();
         }
